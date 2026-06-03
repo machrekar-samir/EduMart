@@ -26,7 +26,7 @@ export default function GetStarted() {
 
   const handleNext = () => {
     if (isLast) {
-      navigate('/login')
+      navigate('/register')
       return
     }
     if (canGoNext()) setStep((s) => s + 1)
@@ -122,7 +122,7 @@ export default function GetStarted() {
               onClick={handleNext}
               disabled={!canGoNext() && !isLast}
             >
-              {isLast ? 'Go to login' : 'Next'}
+              {isLast ? 'Create account' : 'Next'}
               {!isLast && (
                 <span className="btn-next-arrow" aria-hidden="true">
                   →

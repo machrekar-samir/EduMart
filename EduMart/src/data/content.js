@@ -1,9 +1,22 @@
 export const NAV_LINKS = [
+  { to: '/marketplace', label: 'Marketplace' },
+  { to: '/digital', label: 'Digital' },
+  { to: '/freelance', label: 'Freelance' },
   { to: '/features', label: 'Features' },
-  { to: '/ai-tools', label: 'AI Tools' },
-  { to: '/trust', label: 'Trust' },
-  { to: '/vision', label: 'Vision' },
 ]
+
+export const MVP_FEATURES = [
+  'User Registration / Login',
+  'Student Profile',
+  'Sell Products',
+  'Buy Products',
+  'Notes Upload',
+  'Search & Filter',
+  'Chat (Buyer & Seller)',
+  'Payment Integration (Razorpay)',
+]
+
+// ... existing exports unchanged below
 
 export const FEATURES = [
   {
@@ -88,18 +101,21 @@ export const AI_FEATURES = [
     title: 'AI Notes Quality Checker',
     desc: 'Automatically analyzes uploaded notes and provides actionable scores.',
     metrics: ['Quality Score', 'Readability Score', 'Completeness Score'],
+    v2: true,
   },
   {
     icon: '💰',
     title: 'AI Price Recommendation',
     desc: 'Suggests optimal selling price based on market intelligence.',
     metrics: ['Category', 'Demand', 'Content Quality', 'Market Trends'],
+    v2: true,
   },
   {
     icon: '🎯',
     title: 'Smart Recommendation Engine',
     desc: 'Personalized discovery based on your academic profile.',
     metrics: ['College', 'Branch', 'Academic Year', 'Interests'],
+    v2: true,
   },
 ]
 
@@ -147,7 +163,7 @@ export const AUDIENCE = [
 
 export const GET_STARTED_STEPS = [
   {
-    title: 'Welcome to EduMartX',
+    title: 'Welcome to EduMart',
     subtitle: 'Your campus marketplace in three quick steps.',
     body: 'Join thousands of students buying, selling, and growing together. Tell us how you want to use the platform.',
     options: ['Buy & learn', 'Sell & earn', 'Both'],
@@ -166,7 +182,7 @@ export const GET_STARTED_STEPS = [
   },
   {
     title: "You're all set!",
-    subtitle: 'Your EduMartX account is ready.',
-    body: 'Explore the marketplace, list your first item, or browse AI-powered recommendations tailored for you.',
+    subtitle: 'Your EduMart account is ready.',
+    body: 'Create your account to explore the marketplace and list your first item.',
   },
 ]

@@ -29,14 +29,14 @@ export default function Home() {
               exclusively for college students.
             </p>
             <div className="hero-ctas">
-              <Link to="/get-started" className="btn btn-primary btn-lg">
+              <Link to="/marketplace" className="btn btn-primary btn-lg">
+                Browse Marketplace
+              </Link>
+              <Link to="/sell" className="btn btn-outline btn-lg">
                 Start Selling Today
               </Link>
-              <Link to="/features" className="btn btn-outline btn-lg">
-                Discover Opportunities
-              </Link>
-              <Link to="/vision" className="btn btn-ghost btn-lg">
-                Build Your Future 🚀
+              <Link to="/register" className="btn btn-ghost btn-lg">
+                Create Account
               </Link>
             </div>
             <div className="hero-stats">

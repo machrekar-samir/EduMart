@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react'
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import { NAV_LINKS } from '../data/content'
+import { useAuth } from '../context/AuthContext'
 
 export default function Layout() {
+  const { isAuthenticated, logout } = useAuth()
   const [menuOpen, setMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const location = useLocation()
@@ -44,12 +46,28 @@ export default function Layout() {
           </nav>
 
           <div className="header-actions">
-            <Link to="/login" className="btn btn-ghost">
-              Log in
-            </Link>
-            <Link to="/get-started" className="btn btn-primary">
-              Get Started
-            </Link>
+            {isAuthenticated ? (
+              <>
+                <Link to="/dashboard" className="btn btn-ghost">
+                  Dashboard
+                </Link>
+                <Link to="/sell" className="btn btn-primary">
+                  Sell
+                </Link>
+                <button type="button" className="btn btn-ghost" onClick={logout}>
+                  Log out
+                </button>
+              </>
+            ) : (
+              <>
+                <Link to="/login" className="btn btn-ghost">
+                  Log in
+                </Link>
+                <Link to="/register" className="btn btn-primary">
+                  Get Started
+                </Link>
+              </>
+            )}
             <button
               type="button"
               className="menu-toggle"
@@ -73,12 +91,28 @@ export default function Layout() {
               {link.label}
             </NavLink>
           ))}
-          <NavLink to="/login" onClick={closeMenu}>
-            Log in
-          </NavLink>
-          <NavLink to="/get-started" className="mobile-cta" onClick={closeMenu}>
-            Get Started
-          </NavLink>
+          {isAuthenticated ? (
+            <>
+              <NavLink to="/dashboard" onClick={closeMenu}>
+                Dashboard
+              </NavLink>
+              <NavLink to="/chat" onClick={closeMenu}>
+                Chat
+              </NavLink>
+              <NavLink to="/profile" onClick={closeMenu}>
+                Profile
+              </NavLink>
+            </>
+          ) : (
+            <>
+              <NavLink to="/login" onClick={closeMenu}>
+                Log in
+              </NavLink>
+              <NavLink to="/register" className="mobile-cta" onClick={closeMenu}>
+                Get Started
+              </NavLink>
+            </>
+          )}
         </nav>
       </header>
 
@@ -98,9 +132,9 @@ export default function Layout() {
             </div>
             <div className="footer-links">
               <h4>Marketplace</h4>
-              <Link to="/features">Features</Link>
-              <Link to="/about">About</Link>
-              <Link to="/audience">Audience</Link>
+              <Link to="/marketplace">Browse</Link>
+              <Link to="/digital">Digital</Link>
+              <Link to="/freelance">Freelance</Link>
             </div>
             <div className="footer-links">
               <h4>Platform</h4>
@@ -111,8 +145,8 @@ export default function Layout() {
             <div className="footer-links">
               <h4>Account</h4>
               <Link to="/login">Log in</Link>
-              <Link to="/get-started">Get Started</Link>
-              <Link to="/vision">Our Vision</Link>
+              <Link to="/register">Register</Link>
+              <Link to="/dashboard">Dashboard</Link>
             </div>
           </div>
           <div className="footer-bottom">

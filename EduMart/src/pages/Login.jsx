@@ -1,12 +1,52 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 import '../styles/Login.css'
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false)
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
+  const { login, googleLogin } = useAuth()
+  const navigate = useNavigate()
+  const location = useLocation()
+  const from = location.state?.from?.pathname || '/dashboard'
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
+    setError('')
+    try {
+      await login(email, password)
+      navigate(from, { replace: true })
+    } catch (err) {
+      setError(err.message)
+    }
+  }
+
+  const handleGoogle = async () => {
+    setError('')
+    const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID
+    if (!clientId) {
+      setError('Google login: set VITE_GOOGLE_CLIENT_ID in .env')
+      return
+    }
+    if (!window.google?.accounts?.id) {
+      setError('Google script not loaded')
+      return
+    }
+    window.google.accounts.id.initialize({
+      client_id: clientId,
+      callback: async (response) => {
+        try {
+          await googleLogin(response.credential)
+          navigate(from, { replace: true })
+        } catch (err) {
+          setError(err.message)
+        }
+      },
+    })
+    window.google.accounts.id.prompt()
   }
 
   return (
@@ -23,7 +63,7 @@ export default function Login() {
             <span className="logo-icon" aria-hidden="true">
               E
             </span>
-            <span>EduMartX</span>
+            <span>EduMart</span>
           </Link>
           <h1>Welcome back, student.</h1>
           <p>
@@ -31,9 +71,9 @@ export default function Login() {
             campus marketplace.
           </p>
           <ul className="login-perks">
-            <li>AI-powered pricing for your notes</li>
-            <li>College-verified buyer trust</li>
-            <li>Freelance gigs &amp; digital store</li>
+            <li>Email &amp; Google login with JWT</li>
+            <li>Razorpay — UPI, cards, net banking</li>
+            <li>Real-time buyer–seller chat</li>
           </ul>
         </div>
 
@@ -42,7 +82,7 @@ export default function Login() {
             <h2>Log in</h2>
             <p>
               New here?{' '}
-              <Link to="/get-started" className="login-link">
+              <Link to="/register" className="login-link">
                 Create an account
               </Link>
             </p>
@@ -57,6 +97,8 @@ export default function Login() {
                 placeholder="you@college.edu"
                 autoComplete="email"
                 required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </label>
 
@@ -69,6 +111,8 @@ export default function Login() {
                   placeholder="Enter your password"
                   autoComplete="current-password"
                   required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
                 <button
                   type="button"
@@ -81,15 +125,7 @@ export default function Login() {
               </div>
             </label>
 
-            <div className="login-row">
-              <label className="login-checkbox">
-                <input type="checkbox" name="remember" />
-                <span>Remember me</span>
-              </label>
-              <a href="#reset" className="login-link">
-                Forgot password?
-              </a>
-            </div>
+            {error && <p className="form-error">{error}</p>}
 
             <button type="submit" className="btn btn-primary btn-lg login-submit">
               Sign in
@@ -101,11 +137,8 @@ export default function Login() {
           </div>
 
           <div className="login-social">
-            <button type="button" className="btn btn-social">
+            <button type="button" className="btn btn-social" onClick={handleGoogle}>
               Google
-            </button>
-            <button type="button" className="btn btn-social">
-              Microsoft
             </button>
           </div>
 
