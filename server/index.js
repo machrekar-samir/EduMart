@@ -13,6 +13,8 @@ import uploadRoutes from './routes/upload.js'
 import paymentRoutes from './routes/payments.js'
 import chatRoutes from './routes/chat.js'
 import adminRoutes from './routes/admin.js'
+import statsRoutes from './routes/stats.js'
+import aiRoutes from './routes/ai.js'
 import Message from './models/Message.js'
 import Conversation from './models/Conversation.js'
 import User from './models/User.js'
@@ -39,6 +41,7 @@ app.use(cors({ origin: corsOrigin, credentials: true }))
 app.use(express.json({ limit: '2mb' }))
 
 app.get('/api/health', (_, res) => res.json({ ok: true }))
+app.use('/api/stats', statsRoutes)
 
 app.use('/api/auth', authRoutes)
 app.use('/api/products', productRoutes)
@@ -46,6 +49,9 @@ app.use('/api/upload', uploadRoutes)
 app.use('/api/payments', paymentRoutes)
 app.use('/api/chat', chatRoutes)
 app.use('/api/admin', adminRoutes)
+app.use('/api/ai', aiRoutes)
+
+app.set('io', io)
 
 io.use(async (socket, next) => {
   try {

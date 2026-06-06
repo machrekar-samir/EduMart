@@ -25,7 +25,7 @@ export default function Admin() {
       <PageHero
         label="Admin"
         title="Admin dashboard"
-        desc="Approve listings, remove spam, manage users, and view earnings."
+        description="Approve listings, remove spam, manage users, and view earnings."
       />
       <section className="section">
         <div className="container">

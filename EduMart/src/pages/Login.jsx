@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import LogoIcon from '../components/LogoIcon'
 import '../styles/Login.css'
 
 export default function Login() {
@@ -8,33 +9,40 @@ export default function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+  const [submitting, setSubmitting] = useState(false)
   const { login, googleLogin } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
-  const from = location.state?.from?.pathname || '/dashboard'
+  const from = location.state?.from?.pathname || '/marketplace'
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    if (submitting) return
     setError('')
+    setSubmitting(true)
     try {
       await login(email, password)
       navigate(from, { replace: true })
     } catch (err) {
       setError(err.message)
+    } finally {
+      setSubmitting(false)
     }
   }
 
   const handleGoogle = async () => {
+    if (submitting) return
     setError('')
     const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID
-    if (!clientId) {
-      setError('Google login: set VITE_GOOGLE_CLIENT_ID in .env')
+    if (!clientId || clientId.includes('your-google-client-id')) {
+      setError('Google login is not configured yet.')
       return
     }
     if (!window.google?.accounts?.id) {
-      setError('Google script not loaded')
+      setError('Google sign-in could not load. Please refresh the page.')
       return
     }
+    setSubmitting(true)
     window.google.accounts.id.initialize({
       client_id: clientId,
       callback: async (response) => {
@@ -43,10 +51,17 @@ export default function Login() {
           navigate(from, { replace: true })
         } catch (err) {
           setError(err.message)
+        } finally {
+          setSubmitting(false)
         }
       },
     })
-    window.google.accounts.id.prompt()
+    window.google.accounts.id.prompt((notification) => {
+      if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+        setSubmitting(false)
+        setError('Google sign-in was blocked. Try email and password instead.')
+      }
+    })
   }
 
   return (
@@ -60,10 +75,8 @@ export default function Login() {
       <div className="login-shell">
         <div className="login-brand-panel">
           <Link to="/" className="logo login-logo">
-            <span className="logo-icon" aria-hidden="true">
-              E
-            </span>
-            <span>EduMart</span>
+            <LogoIcon />
+            <span>EduMartX</span>
           </Link>
           <h1>Welcome back, student.</h1>
           <p>
@@ -97,6 +110,7 @@ export default function Login() {
                 placeholder="you@college.edu"
                 autoComplete="email"
                 required
+                disabled={submitting}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
@@ -111,6 +125,7 @@ export default function Login() {
                   placeholder="Enter your password"
                   autoComplete="current-password"
                   required
+                  disabled={submitting}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
@@ -127,8 +142,12 @@ export default function Login() {
 
             {error && <p className="form-error">{error}</p>}
 
-            <button type="submit" className="btn btn-primary btn-lg login-submit">
-              Sign in
+            <button
+              type="submit"
+              className="btn btn-primary btn-lg login-submit"
+              disabled={submitting}
+            >
+              {submitting ? 'Signing in…' : 'Sign in'}
             </button>
           </form>
 
@@ -137,7 +156,12 @@ export default function Login() {
           </div>
 
           <div className="login-social">
-            <button type="button" className="btn btn-social" onClick={handleGoogle}>
+            <button
+              type="button"
+              className="btn btn-social"
+              onClick={handleGoogle}
+              disabled={submitting}
+            >
               Google
             </button>
           </div>

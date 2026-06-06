@@ -143,8 +143,10 @@ export default function ProductDetails() {
                 </button>
               </>
             )}
-            {product.status === 'pending' && (
-              <p className="muted">Listing pending admin approval.</p>
+            {isSeller && product.status === 'approved' && (
+              <Link to="/marketplace/seller" className="btn btn-outline">
+                Manage in seller hub
+              </Link>
             )}
             {product.status === 'sold' && <p className="muted">This item has been sold.</p>}
           </div>

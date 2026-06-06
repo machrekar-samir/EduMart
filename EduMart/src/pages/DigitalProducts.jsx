@@ -15,7 +15,7 @@ export default function DigitalProducts() {
       <PageHero
         label="Digital store"
         title="Digital products"
-        desc="Templates, prompt packs, design assets, and coding resources built for students."
+        description="Templates, prompt packs, design assets, and coding resources built for students."
       />
       <section className="section">
         <div className="container">

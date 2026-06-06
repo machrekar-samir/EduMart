@@ -65,7 +65,7 @@ export default function Chat() {
 
   return (
     <main className="chat-page">
-      <PageHero label="Chat" title="Buyer & seller messages" desc="Real-time messaging, product inquiries, and offer negotiation." />
+      <PageHero label="Chat" title="Buyer & seller messages" description="Real-time messaging, product inquiries, and offer negotiation." />
       <section className="section">
         <div className="container chat-layout">
           <aside className="chat-sidebar">

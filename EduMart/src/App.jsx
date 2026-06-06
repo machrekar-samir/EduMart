@@ -34,7 +34,14 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route element={<Layout />}>
             <Route index element={<Home />} />
-            <Route path="marketplace" element={<Marketplace />} />
+            <Route
+              path="marketplace/*"
+              element={
+                <ProtectedRoute>
+                  <Marketplace />
+                </ProtectedRoute>
+              }
+            />
             <Route path="product/:id" element={<ProductDetails />} />
             <Route
               path="sell"

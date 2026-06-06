@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import { NAV_LINKS } from '../data/content'
 import { useAuth } from '../context/AuthContext'
+import LogoIcon from './LogoIcon'
+import AiChatbot from './AiChatbot'
 
 export default function Layout() {
   const { isAuthenticated, logout } = useAuth()
@@ -27,10 +29,8 @@ export default function Layout() {
       <header className={`header ${scrolled ? 'scrolled' : ''}`}>
         <div className="container header-inner">
           <Link to="/" className="logo" aria-label="EduMartX Home">
-            <span className="logo-icon" aria-hidden="true">
-              
-            </span>
-            <span>EduMart</span>
+            <LogoIcon />
+            <span>EduMartX</span>
           </Link>
 
           <nav className="nav" aria-label="Main navigation">
@@ -46,19 +46,16 @@ export default function Layout() {
           </nav>
 
           <div className="header-actions">
-            {isAuthenticated ? (
+            {isAuthenticated ? 
               <>
                 <Link to="/dashboard" className="btn btn-ghost">
                   Dashboard
-                </Link>
-                <Link to="/sell" className="btn btn-primary">
-                  Sell
                 </Link>
                 <button type="button" className="btn btn-ghost" onClick={logout}>
                   Log out
                 </button>
               </>
-            ) : (
+             : (
               <>
                 <Link to="/login" className="btn btn-ghost">
                   Log in
@@ -123,9 +120,7 @@ export default function Layout() {
           <div className="footer-grid">
             <div className="footer-brand">
               <Link to="/" className="logo">
-                <span className="logo-icon" aria-hidden="true">
-                  E
-                </span>
+                <LogoIcon />
                 <span>EduMartX</span>
               </Link>
               <p>The marketplace built for students. Learn. Earn. Grow.</p>
@@ -155,6 +150,8 @@ export default function Layout() {
           </div>
         </div>
       </footer>
+
+      <AiChatbot />
     </div>
   )
 }

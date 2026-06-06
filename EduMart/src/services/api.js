@@ -12,13 +12,40 @@ async function request(path, options = {}) {
   const token = getToken()
   if (token) headers.Authorization = `Bearer ${token}`
 
-  const res = await fetch(`${API_BASE}${path}`, { ...options, headers })
-  const data = await res.json().catch(() => ({}))
-  if (!res.ok) throw new Error(data.message || 'Request failed')
+  let res
+  try {
+    res = await fetch(`${API_BASE}${path}`, { ...options, headers })
+  } catch {
+    throw new Error(
+      'Cannot reach the server. From the project root run: npm run dev'
+    )
+  }
+
+  const text = await res.text()
+  let data = {}
+  if (text) {
+    try {
+      data = JSON.parse(text)
+    } catch {
+      data = {}
+    }
+  }
+
+  if (!res.ok) {
+    if (data.message) throw new Error(data.message)
+    if (res.status === 502 || res.status === 504) {
+      throw new Error(
+        'Backend server is not running. From the project root run: npm run dev'
+      )
+    }
+    throw new Error('Something went wrong. Please try again.')
+  }
+
   return data
 }
 
 export const api = {
+  getStats: () => request('/stats'),
   register: (body) => request('/auth/register', { method: 'POST', body: JSON.stringify(body) }),
   login: (body) => request('/auth/login', { method: 'POST', body: JSON.stringify(body) }),
   googleLogin: (credential) =>
@@ -35,7 +62,12 @@ export const api = {
   getMyProducts: () => request('/products/mine'),
   createProduct: (body) =>
     request('/products', { method: 'POST', body: JSON.stringify(body) }),
+  updateProduct: (id, body) =>
+    request(`/products/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
+  deleteProduct: (id) => request(`/products/${id}`, { method: 'DELETE' }),
   priceHint: () => request('/products/hints/price'),
+  aiChat: (message) =>
+    request('/ai/chat', { method: 'POST', body: JSON.stringify({ message }) }),
 
   uploadImage: (file) => {
     const fd = new FormData()

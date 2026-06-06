@@ -79,11 +79,18 @@ router.post('/', requireAuth, async (req, res) => {
       college: college || req.user.college,
       tags: tags || [],
       seller: req.user._id,
-      status: req.user.role === 'admin' ? 'approved' : 'pending',
+      status: 'approved',
       aiPriceHint,
     })
 
-    res.status(201).json({ product })
+    const populated = await Product.findById(product._id).populate(
+      'seller',
+      'name email avatar college'
+    )
+    const io = req.app.get('io')
+    if (io) io.emit('product_created', { product: populated })
+
+    res.status(201).json({ product: populated })
   } catch (err) {
     res.status(500).json({ message: err.message })
   }
@@ -101,7 +108,13 @@ router.patch('/:id', requireAuth, async (req, res) => {
     if (req.body[key] !== undefined) product[key] = req.body[key]
   }
   await product.save()
-  res.json({ product })
+  const populated = await Product.findById(product._id).populate(
+    'seller',
+    'name email avatar college'
+  )
+  const io = req.app.get('io')
+  if (io) io.emit('product_updated', { product: populated })
+  res.json({ product: populated })
 })
 
 router.delete('/:id', requireAuth, async (req, res) => {
@@ -110,7 +123,10 @@ router.delete('/:id', requireAuth, async (req, res) => {
   if (product.seller.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
     return res.status(403).json({ message: 'Not allowed' })
   }
+  const productId = product._id.toString()
   await product.deleteOne()
+  const io = req.app.get('io')
+  if (io) io.emit('product_deleted', { productId })
   res.json({ message: 'Product removed' })
 })
 

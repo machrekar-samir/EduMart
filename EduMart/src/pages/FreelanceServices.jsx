@@ -16,7 +16,7 @@ export default function FreelanceServices() {
       <PageHero
         label="Freelance hub"
         title="Student freelance services"
-        desc="Web dev, design, editing, resumes, and more — hire peers on your campus."
+        description="Web dev, design, editing, resumes, and more — hire peers on your campus."
       />
       <section className="section">
         <div className="container">

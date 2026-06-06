@@ -10,7 +10,9 @@ export default function Dashboard() {
   const [orders, setOrders] = useState([])
 
   useEffect(() => {
-    api.getMyProducts().then(({ products }) => setListings(products))
+    api.getMyProducts().then(({ products }) =>
+      setListings(products.filter((p) => p.status !== 'pending'))
+    )
     api.getOrders().then(({ orders: o }) => setOrders(o)).catch(() => {})
   }, [])
 
@@ -19,7 +21,7 @@ export default function Dashboard() {
       <PageHero
         label="Dashboard"
         title={`Hi, ${user?.name?.split(' ')[0] || 'Student'}`}
-        desc="Manage listings, track orders, and grow your campus store."
+        description="Manage listings, track orders, and grow your campus store."
       />
       <section className="section">
         <div className="container dashboard-grid">

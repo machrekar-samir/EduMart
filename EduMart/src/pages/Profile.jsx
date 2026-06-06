@@ -46,7 +46,7 @@ export default function Profile() {
       <PageHero
         label="Student profile"
         title="Your campus identity"
-        desc="College, branch, and bio help buyers trust your listings."
+        description="College, branch, and bio help buyers trust your listings."
       />
       <section className="section">
         <div className="container profile-form-wrap">
